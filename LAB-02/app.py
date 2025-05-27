@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, json
 from cipher.caesar import CaesarCipher
+from cipher.vigenere import VigenereCipher  # Import VigenereCipher
 
 app = Flask(__name__)
 
@@ -27,6 +28,27 @@ def caesar_decrypt():
     key = int(request.form['inputKeyCipher'])
     Caesar = CaesarCipher()
     decrypted_text = Caesar.decrypt_text(text, key)
+    return f"text: {text}<br/>key: {key}<br/>decrypted text: {decrypted_text}"
+
+#router routes for vigenere cypher
+@app.route("/vigenere")
+def vigenere():
+    return render_template('vigenere.html')
+
+@app.route("/vigenere/encrypt", methods=['POST'])
+def vigenere_encrypt():
+    text = request.form['inputPlainText']
+    key = request.form['inputKeyPlain']  # Key for Vigenere is a string
+    Vigenere = VigenereCipher()
+    encrypted_text = Vigenere.vigenere_encrypt(text, key)
+    return f"text: {text}<br/>key: {key}<br/>encrypted text: {encrypted_text}"
+
+@app.route("/vigenere/decrypt", methods=['POST'])
+def vigenere_decrypt():
+    text = request.form['inputCipherText']
+    key = request.form['inputKeyCipher']  # Key for Vigenere is a string
+    Vigenere = VigenereCipher()
+    decrypted_text = Vigenere.vigenere_decrypt(text, key)
     return f"text: {text}<br/>key: {key}<br/>decrypted text: {decrypted_text}"
 
 # main function
