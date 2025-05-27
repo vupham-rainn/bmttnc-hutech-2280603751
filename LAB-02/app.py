@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, json
 from cipher.caesar import CaesarCipher
-from cipher.vigenere import VigenereCipher  # Import VigenereCipher
+from cipher.vigenere import VigenereCipher 
+from cipher.railfence import RailFenceCipher 
 
 app = Flask(__name__)
 
@@ -50,6 +51,27 @@ def vigenere_decrypt():
     Vigenere = VigenereCipher()
     decrypted_text = Vigenere.vigenere_decrypt(text, key)
     return f"text: {text}<br/>key: {key}<br/>decrypted text: {decrypted_text}"
+
+#router routes for rail fence cypher
+@app.route("/railfence")
+def railfence():
+    return render_template('railfence.html')
+
+@app.route("/railfence/encrypt", methods=['POST'])
+def railfence_encrypt():
+    text = request.form['inputPlainText']
+    num_rails = int(request.form['inputNumRailsPlain']) # Key for Rail Fence is an integer
+    RailFence = RailFenceCipher()
+    encrypted_text = RailFence.rail_fence_encrypt(text, num_rails)
+    return f"text: {text}<br/>number of rails: {num_rails}<br/>encrypted text: {encrypted_text}"
+
+@app.route("/railfence/decrypt", methods=['POST'])
+def railfence_decrypt():
+    text = request.form['inputCipherText']
+    num_rails = int(request.form['inputNumRailsCipher']) # Key for Rail Fence is an integer
+    RailFence = RailFenceCipher()
+    decrypted_text = RailFence.rail_fence_decrypt(text, num_rails)
+    return f"text: {text}<br/>number of rails: {num_rails}<br/>decrypted text: {decrypted_text}"
 
 # main function
 if __name__ == "__main__":
